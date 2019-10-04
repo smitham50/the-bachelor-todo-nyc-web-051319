@@ -1,50 +1,52 @@
 require "pry"
 
 def get_first_name_of_season_winner(data, season)
-  data[season].each do |contestant_stats|
-    if contestant_stats["status"] == "Winner"
-      name_array = contestant_stats["name"].split(" ")
-      return name_array[0]
+  winner = nil
+  data.each do |seasons, contestants|
+    if seasons == season
+      winner = contestants.find {|contestant| contestant["status"] == "Winner"}["name"].split(" ")[0]
     end
   end
+  winner
 end
-
+ 
 def get_contestant_name(data, occupation)
   data.each do |season, contestants|
-    contestants.each do |stats|
-    if stats["occupation"] == occupation
-      return stats["name"]
+    contestants.each do |contestant|
+      if contestant["occupation"] == occupation
+        return contestant["name"]
       end
     end
   end
 end
 
 def count_contestants_by_hometown(data, hometown)
-  hometown_count = 0
+  counter = 0
   data.each do |season, contestants|
-    contestants.each do |stats|
-      if stats["hometown"] == hometown
-        hometown_count += 1
+    contestants.each do |contestants|
+      if contestants["hometown"] == hometown
+        counter += 1
       end
     end
   end
-  hometown_count
+  counter
 end
 
 def get_occupation(data, hometown)
   data.each do |season, contestants|
-    contestants.each do |stats|
-      if stats["hometown"] == hometown
-        return stats["occupation"]
+    contestants.each do |contestant|
+      if contestant["hometown"] == hometown
+        return contestant["occupation"]
       end
     end
   end
 end
 
 def get_average_age_for_season(data, season)
-  age_array = []
-  data[season].each do |contestant_stats|
-    age_array << contestant_stats["age"].to_f
+  age_total = 0
+  contestant_total = data[season].length
+  data[season].each do |contestants|
+    age_total += contestants["age"].to_i
   end
-  (age_array.sum/age_array.length.to_f).round
+  (age_total/contestant_total.to_f).round(0)
 end
